@@ -10,19 +10,81 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.ListView;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
+
+    ListView lv_pdf;
+    public static ArrayList<File> filelist = new ArrayList<File>();
+    PDFAdapter obj_adapter;
+    File dir;
+
     private static final int PERMISSION_CODE=1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
 
     Uri imageUri;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        init();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        init();
+    }
+
+    private void init() {
+        lv_pdf = (ListView) findViewById(R.id.lv_pdf);
+
+        //path to directory where pdfs are stored
+        dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),"CamScannerCloneStorage");
+        getfile(dir);
+
+        obj_adapter = new PDFAdapter(getApplicationContext(),filelist);
+        lv_pdf.setAdapter(obj_adapter);
+    }
+
+    private ArrayList<File> getfile(File dir) {
+        File listFile[] = dir.listFiles();
+        if(listFile != null && listFile.length > 0)
+        {
+            for(int i=0;i<listFile.length;i++)
+                if(listFile[i].isDirectory())
+                {
+                    getfile(listFile[i]);
+                }
+            else
+                {
+                    boolean booleanpdf = false;
+                    //only .pdf files
+                    if(listFile[i].getName().endsWith(".pdf"))
+                    {
+                        for(int j=0;j<filelist.size();j++)
+                        {
+                            if(filelist.get(j).getName().equals(listFile[i].getName()))
+                            {
+                                booleanpdf = true;
+                            }
+                            else
+                            {
+                                filelist.add(listFile[i]);
+                            }
+                        }
+                    }
+                }
+        }
+        return filelist;
     }
 
     public void check(View v)
