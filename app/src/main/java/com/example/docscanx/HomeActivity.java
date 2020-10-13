@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.io.File;
@@ -53,6 +54,16 @@ public class HomeActivity extends AppCompatActivity {
 
         obj_adapter = new PDFAdapter(getApplicationContext(),filelist);
         lv_pdf.setAdapter(obj_adapter);
+
+        //opening the pdf:
+        lv_pdf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+                Intent intent = new Intent(getApplicationContext(),PdfActivity.class);
+                intent.putExtra("position",i);
+                startActivity(intent);
+            }
+        });
     }
 
     private ArrayList<File> getfile(File dir) {
