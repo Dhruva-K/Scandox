@@ -12,9 +12,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
         lv_pdf = (ListView) findViewById(R.id.lv_pdf);
 
         //path to directory where pdfs are stored
-        dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),"CamScannerCloneStorage");
+        dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/CamScannerCloudStorage");
         getfile(dir);
 
         obj_adapter = new PDFAdapter(getApplicationContext(),filelist);
@@ -62,39 +64,46 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),PdfActivity.class);
                 intent.putExtra("position",i);
                 startActivity(intent);
+
+                Log.e("Position", i + "");
             }
         });
     }
 
-    private ArrayList<File> getfile(File dir) {
+    public ArrayList<File> getfile(File dir) {
         File listFile[] = dir.listFiles();
+
         if(listFile != null && listFile.length > 0)
         {
-            for(int i=0;i<listFile.length;i++)
-                if(listFile[i].isDirectory())
-                {
+
+            for(int i=0;i<listFile.length;i++) {
+                if (listFile[i].isDirectory()) {
                     getfile(listFile[i]);
-                }
-            else
-                {
+                } else
+                    {
                     boolean booleanpdf = false;
                     //only .pdf files
-                    if(listFile[i].getName().endsWith(".pdf"))
-                    {
-                        for(int j=0;j<filelist.size();j++)
-                        {
-                            if(filelist.get(j).getName().equals(listFile[i].getName()))
-                            {
+                    if (listFile[i].getName().endsWith(".jpg.pdf")) {
+                        for (int j = 0; j < filelist.size(); j++) {
+                            if (filelist.get(j).getName().equals(listFile[i].getName())) {
                                 booleanpdf = true;
                             }
-                            else
-                            {
-                                filelist.add(listFile[i]);
+                            else {
+
                             }
+                            }
+
+                        if (booleanpdf) {
+                            booleanpdf = false;
+                        } else {
+                            filelist.add(listFile[i]);
                         }
+
                     }
-                }
+                    }
+            }
         }
+
         return filelist;
     }
 

@@ -59,7 +59,7 @@ public class ScanActivity extends AppCompatActivity implements IUploadCallbacks 
         setContentView(R.layout.activity_scan);
 
         mService = getApiUpload();
-
+        //converts xml view into java object
         imageView=(ImageView)findViewById(R.id.image_view);
         btnUpload = (ImageView)findViewById(R.id.button_upload);
         Save= (ImageView)findViewById(R.id.save);
@@ -91,7 +91,7 @@ public class ScanActivity extends AppCompatActivity implements IUploadCallbacks 
                 File directory = new File(sdCard.getAbsolutePath()+"/CamScannerCloudStorage");
                 directory.mkdir();
                 //make directory with name camscannerclonestorage
-                String fileName = image_name+".jpg";
+                String fileName = image_name;
                 File outFile = new File(directory,fileName);
 
                 try{
@@ -109,7 +109,7 @@ public class ScanActivity extends AppCompatActivity implements IUploadCallbacks 
 
                 Document document = new Document();
 
-                String directoryPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath()+"/CamScannerCloneStorage";
+                String directoryPath = sdCard.getAbsolutePath()+"/CamScannerCloudStorage";
 
                 try {
                     PdfWriter.getInstance(document,new FileOutputStream(directoryPath + "/"+image_name+".pdf"));
@@ -122,18 +122,18 @@ public class ScanActivity extends AppCompatActivity implements IUploadCallbacks 
 
                 Image image = null;
                 try {
-                    image = Image.getInstance(directoryPath+"/"+image_name+".jpg");
+                    image = Image.getInstance(directoryPath+"/"+image_name);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (BadElementException e) {
                     e.printStackTrace();
                 }
 
-                float scaler = (document.getPageSize().getWidth() - document.leftMargin() - document.rightMargin() -0 /image.getWidth())*100;
+                float scaler = ((document.getPageSize().getWidth() - document.leftMargin() - document.rightMargin() -0)/image.getWidth())*100;
                 //0 means no indentation
 
                 image.scalePercent(scaler);
-                image.setAlignment(Image.ALIGN_CENTER | Image.ALIGN_TOP);
+                image.setAlignment(Image.ALIGN_CENTER | Image.ALIGN_TOP | Image.ALIGN_BOTTOM);
 
                 try{
                     document.add(image);
@@ -141,7 +141,7 @@ public class ScanActivity extends AppCompatActivity implements IUploadCallbacks 
                     e.printStackTrace();
                 }
                 document.close();
-                Toast.makeText(ScanActivity.this, "PDF Sved successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ScanActivity.this, "PDF Saved successfully", Toast.LENGTH_SHORT).show();
 
                 Intent i = new Intent(ScanActivity.this,HomeActivity.class);
                 startActivity(i);
@@ -179,7 +179,7 @@ public class ScanActivity extends AppCompatActivity implements IUploadCallbacks 
             }
             if(file != null)
             {
-                //if we get file and it is not emty then
+                //if we get file and it is not empty then
                 final ProgressRequestBody requestBody = new ProgressRequestBody(this,file);
                 final MultipartBody.Part body = MultipartBody.Part.createFormData("image",file.getName(),requestBody);
 
@@ -191,7 +191,7 @@ public class ScanActivity extends AppCompatActivity implements IUploadCallbacks 
                                     @Override
                                     public void onResponse(Call<String> call, Response<String> response) {
 
-                                        String image_processed_link = new StringBuilder("http://3.129.11.47/" +
+                                        String image_processed_link = new StringBuilder("http://18.188.152.56/" +
                                                 response.body().replace("\"","")).toString();
                                         Toast.makeText(ScanActivity.this, "Please wait, Image is Processing..", Toast.LENGTH_SHORT).show();
 

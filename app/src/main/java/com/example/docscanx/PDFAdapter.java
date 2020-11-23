@@ -27,7 +27,7 @@ public class PDFAdapter extends ArrayAdapter<File> {
 
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+        return position;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class PDFAdapter extends ArrayAdapter<File> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View view, @NonNull ViewGroup parent) {
         if(view== null){
             view = LayoutInflater.from(getContext()).inflate(R.layout.adapter_pdf,parent,false);
             viewHolder = new ViewHolder();
