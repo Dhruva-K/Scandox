@@ -1,6 +1,7 @@
 package com.example.docscanx;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -20,6 +21,8 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+
+
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -48,6 +51,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void init() {
+
         lv_pdf = (ListView) findViewById(R.id.lv_pdf);
 
         //path to directory where pdfs are stored

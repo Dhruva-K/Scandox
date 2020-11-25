@@ -1,4 +1,4 @@
-package com.example.docscanx.Retrofit;
+ package com.example.docscanx.Retrofit;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
