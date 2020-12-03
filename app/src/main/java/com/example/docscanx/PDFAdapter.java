@@ -18,6 +18,10 @@ public class PDFAdapter extends ArrayAdapter<File> {
     Context context;
     ArrayList<File> al_pdf;
     ViewHolder viewHolder;
+    ViewHolder renameHolder;
+    TextView filename;
+
+    String file_path;
 
     public PDFAdapter(Context context,ArrayList<File> al_pdf){
         super(context,R.layout.adapter_pdf,al_pdf);
@@ -25,6 +29,10 @@ public class PDFAdapter extends ArrayAdapter<File> {
         this.al_pdf = al_pdf;
     }
 
+    public String getFile_path() {
+
+        return file_path;
+    }
     @Override
     public int getItemViewType(int position) {
         return position;
@@ -58,6 +66,18 @@ public class PDFAdapter extends ArrayAdapter<File> {
         viewHolder.tv_filename.setText(al_pdf.get(position).getName());
         return view;
     }
+    public void removeItems(ArrayList<File> filelist){
+        for(File item: filelist){
+            al_pdf.remove(item);
+        }
+        notifyDataSetChanged();
+    }
+    public void renameItem(File pdf, String srt1){
+
+
+
+        }
+
 
     public class ViewHolder
     {
