@@ -74,7 +74,7 @@ public class ScanActivity extends AppCompatActivity implements IUploadCallbacks 
             @Override
             public void onClick(View view) {
                 //On clicking,redirect to home page
-                Intent i = new Intent(ScanActivity.this,HomeActivity.class);
+                Intent i = new Intent(ScanActivity.this,HomeActivity1.class);
                 startActivity(i);
             }
         });
@@ -143,7 +143,7 @@ public class ScanActivity extends AppCompatActivity implements IUploadCallbacks 
                 document.close();
                 Toast.makeText(ScanActivity.this, "PDF Saved successfully", Toast.LENGTH_SHORT).show();
 
-                Intent i = new Intent(ScanActivity.this,HomeActivity.class);
+                Intent i = new Intent(ScanActivity.this,HomeActivity1.class);
                 startActivity(i);
 
             }

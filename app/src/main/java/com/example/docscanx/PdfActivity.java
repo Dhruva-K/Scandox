@@ -35,11 +35,11 @@ public class PdfActivity extends AppCompatActivity implements OnPageChangeListen
     }
 
     private void displayFromSdCard() {
-        pdfFileName = HomeActivity.filelist.get(position).getName();
+        pdfFileName = PDF_fragment.filelist.get(position).getName();
         //file by position and get name to show on top
         Toast.makeText(this,pdfFileName,Toast.LENGTH_SHORT).show();
 
-        pdfView.fromFile(HomeActivity.filelist.get(position))
+        pdfView.fromFile(PDF_fragment.filelist.get(position))
                 .defaultPage(pageNumber)
                 .enableSwipe(true)
                 .swipeHorizontal(false)

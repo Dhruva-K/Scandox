@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Intent i = new Intent(MainActivity.this,HomeActivity.class);
+        final Intent i = new Intent(MainActivity.this,HomeActivity1.class);
 
         Thread thread = new Thread(){
             @Override
