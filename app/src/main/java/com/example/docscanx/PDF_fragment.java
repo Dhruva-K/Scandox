@@ -1,5 +1,13 @@
 package com.example.docscanx;
 
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -34,37 +42,22 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class HomeActivity extends AppCompatActivity {
-
+public class PDF_fragment extends Fragment {
     ListView lv_pdf;
     public static ArrayList<File> filelist = new ArrayList<File>();
     private ArrayList<File> UserSelection = new ArrayList<>();
     PDFAdapter obj_adapter;
     File dir;
     String name,fname;
-    private static final int PERMISSION_CODE=1000;
-    private static final int IMAGE_CAPTURE_CODE = 1001;
-
-    Uri imageUri;
     private androidx.appcompat.view.ActionMode mActionMode;
+
+    @Nullable
     @Override
-    protected void onResume() {
-        super.onResume();
-        init();
-    }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view =  inflater.inflate(R.layout.fragment_pdf,container,false);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
 
-        init();
-    }
-
-    private void init() {
-
-        lv_pdf = (ListView) findViewById(R.id.lv_pdf);
+        lv_pdf = (ListView) view.findViewById(R.id.lv_pdf);
 
         //path to directory where pdfs are stored
         dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/CamScannerCloudStorage");
@@ -73,7 +66,7 @@ public class HomeActivity extends AppCompatActivity {
 
         lv_pdf.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         lv_pdf.setMultiChoiceModeListener(modeListener);
-        obj_adapter = new PDFAdapter(getApplicationContext(),filelist);
+        obj_adapter = new PDFAdapter(getActivity().getApplicationContext(),filelist);
         lv_pdf.setAdapter(obj_adapter);
 
 
@@ -81,13 +74,14 @@ public class HomeActivity extends AppCompatActivity {
         lv_pdf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                Intent intent = new Intent(getApplicationContext(),PdfActivity.class);
+                Intent intent = new Intent(getActivity().getApplicationContext(),PdfActivity.class);
                 intent.putExtra("position",i);
                 startActivity(intent);
 
                 Log.e("Position", i + "");
             }
         });
+        return view;
     }
 
     public ArrayList<File> getfile(File dir) {
@@ -100,7 +94,7 @@ public class HomeActivity extends AppCompatActivity {
                 if (listFile[i].isDirectory()) {
                     getfile(listFile[i]);
                 } else
-                    {
+                {
                     boolean booleanpdf = false;
                     //only .pdf files
                     if (listFile[i].getName().endsWith(".jpg.pdf")) {
@@ -111,7 +105,7 @@ public class HomeActivity extends AppCompatActivity {
                             else {
 
                             }
-                            }
+                        }
 
                         if (booleanpdf) {
                             booleanpdf = false;
@@ -120,7 +114,7 @@ public class HomeActivity extends AppCompatActivity {
                         }
 
                     }
-                    }
+                }
             }
         }
 
@@ -165,7 +159,7 @@ public class HomeActivity extends AppCompatActivity {
             switch ((item.getItemId())) {
                 case R.id.delete:
                     nr=0;
-                    new AlertDialog.Builder(HomeActivity.this)
+                    new AlertDialog.Builder(getActivity())
                             .setIcon(R.drawable.ic_baseline_delete_24)
                             .setTitle("Are you sure?")
                             .setMessage("Do you want to delete this item")
@@ -181,12 +175,12 @@ public class HomeActivity extends AppCompatActivity {
                     mode.finish();
                     return true;
                 case R.id.share:
-                       // String dirpath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/CamScannerCloudStorage"+name;
-                        File f1 = new File(name);
-                            if(!f1.exists()){
-                                Toast.makeText(HomeActivity.this,"File doesnt exist", Toast.LENGTH_SHORT).show();
+                    // String dirpath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/CamScannerCloudStorage"+name;
+                    File f1 = new File(name);
+                    if(!f1.exists()){
+                        Toast.makeText(getActivity(),"File doesnt exist", Toast.LENGTH_SHORT).show();
 
-                            }
+                    }
                             /*Intent intentShare=new Intent(Intent.ACTION_SEND);
                             intentShare.setType("application/pdf");
                             intentShare.putExtra(Intent.EXTRA_STREAM, Uri.parse(name));
@@ -215,7 +209,7 @@ public class HomeActivity extends AppCompatActivity {
 
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                             intentShare.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            Uri path= FileProvider.getUriForFile(HomeActivity.this,"com.example.docscanx.fileprovider",f1);
+                            Uri path= FileProvider.getUriForFile(getActivity(),"com.example.docscanx.fileprovider",f1);
                             intentShare.putExtra(Intent.EXTRA_STREAM,path);
                         }
                         else{
@@ -227,7 +221,7 @@ public class HomeActivity extends AppCompatActivity {
                     }
                     catch (Exception e){
                         e.printStackTrace();
-                        Toast.makeText(HomeActivity.this,"No activity available",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"No activity available",Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -237,10 +231,10 @@ public class HomeActivity extends AppCompatActivity {
 
                 case R.id.rename:
                     AlertDialog.Builder alert = new AlertDialog.Builder(
-                            HomeActivity.this);
+                            getActivity());
                     alert.setTitle("Rename");
 
-                    final EditText input = new EditText(HomeActivity.this);
+                    final EditText input = new EditText(getActivity());
                     alert.setView(input);
 
 
@@ -271,55 +265,9 @@ public class HomeActivity extends AppCompatActivity {
         }
         @Override public void onDestroyActionMode(ActionMode mode) {
 
-            }
+        }
 
 
     };
 
-
-
-
-
-
-
-    public void check(View v)
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if(checkSelfPermission(Manifest.permission.CAMERA)== PackageManager.PERMISSION_DENIED
-            || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_DENIED)
-            {
-                String[] permission = {Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                requestPermissions(permission,PERMISSION_CODE);
-            }
-            else
-            {
-                OpenCamera();
-            }
-        }
-        else
-        {
-            OpenCamera();
-        }
-    }
-    private void OpenCamera(){
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE,"New Image");
-        values.put(MediaStore.Images.Media.DESCRIPTION,"from the camera");
-        imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
-
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
-        startActivityForResult(cameraIntent,IMAGE_CAPTURE_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK)
-        {
-            Intent i=new Intent(HomeActivity.this,ScanActivity.class);
-            i.setData(imageUri);
-            startActivity(i);
-        }
-    }
 }
