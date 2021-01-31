@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/customshape"
     tools:context=".HomeActivity1">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -11,22 +12,32 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
+
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
             android:gravity="center"
             android:minHeight="?actionBarSize"
             android:padding="@dimen/appbar_padding"
             android:text="@string/app_name"
-            android:fontFamily=""
-            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+            android:textColor="#FFFFFF"
+            android:textSize="21sp"
+
+            />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
+            app:tabTextColor="#9AFC1D"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary" />
+            android:background="?attr/colorPrimary"
+
+            />
+
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
@@ -41,13 +52,23 @@
         android:layout_height="60dp"
         android:src="@drawable/circle"
         android:layout_gravity="bottom|center"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="10dp"/>
 
     <ImageView
         android:onClick="check"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_gravity="bottom|center"
-        android:layout_marginBottom="37dp"
+        android:layout_marginBottom="27dp"
         android:src="@drawable/ic_baseline_photo_camera_24"/>
+
+    <ImageView
+        android:onClick="selectImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom|left"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="60dp"
+        android:src="@drawable/ic_baseline_image_24"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

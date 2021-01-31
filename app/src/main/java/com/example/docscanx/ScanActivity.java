@@ -112,7 +112,7 @@ public class ScanActivity extends AppCompatActivity implements IUploadCallbacks 
                 String directoryPath = sdCard.getAbsolutePath()+"/CamScannerCloudStorage";
 
                 try {
-                    PdfWriter.getInstance(document,new FileOutputStream(directoryPath + "/"+image_name+".pdf"));
+                    PdfWriter.getInstance(document,new FileOutputStream(directoryPath + "/"+image_name.replaceAll(".jpg",".pdf")));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (DocumentException e) {
@@ -191,7 +191,7 @@ public class ScanActivity extends AppCompatActivity implements IUploadCallbacks 
                                     @Override
                                     public void onResponse(Call<String> call, Response<String> response) {
 
-                                        String image_processed_link = new StringBuilder("http://18.188.152.56/" +
+                                        String image_processed_link = new StringBuilder("http://3.128.76.178/" +
                                                 response.body().replace("\"","")).toString();
                                         Toast.makeText(ScanActivity.this, "Please wait, Image is Processing..", Toast.LENGTH_SHORT).show();
 

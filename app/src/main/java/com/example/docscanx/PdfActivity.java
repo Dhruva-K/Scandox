@@ -1,6 +1,7 @@
 package com.example.docscanx;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.widget.Toast;
@@ -19,12 +20,14 @@ public class PdfActivity extends AppCompatActivity implements OnPageChangeListen
         Integer pageNumber = 0;
         String pdfFileName;
         int position = -1;
-
+        Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf);
+        toolbar = (Toolbar) findViewById(R.id.tb);
 
+        setSupportActionBar(toolbar);
         init();
     }
 
@@ -38,7 +41,7 @@ public class PdfActivity extends AppCompatActivity implements OnPageChangeListen
         pdfFileName = PDF_fragment.filelist.get(position).getName();
         //file by position and get name to show on top
         Toast.makeText(this,pdfFileName,Toast.LENGTH_SHORT).show();
-
+        toolbar.setTitle(pdfFileName);
         pdfView.fromFile(PDF_fragment.filelist.get(position))
                 .defaultPage(pageNumber)
                 .enableSwipe(true)

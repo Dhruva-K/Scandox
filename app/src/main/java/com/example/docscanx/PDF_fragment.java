@@ -1,6 +1,9 @@
 package com.example.docscanx;
 
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,12 +40,28 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.docscanx.Retrofit.IUploadApi;
+import com.example.docscanx.Retrofit.RetrofitClient;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class PDF_fragment extends Fragment {
+    SendMessage SM;
     ListView lv_pdf;
     public static ArrayList<File> filelist = new ArrayList<File>();
     private ArrayList<File> UserSelection = new ArrayList<>();
@@ -97,7 +116,7 @@ public class PDF_fragment extends Fragment {
                 {
                     boolean booleanpdf = false;
                     //only .pdf files
-                    if (listFile[i].getName().endsWith(".jpg.pdf")) {
+                    if (listFile[i].getName().endsWith(".pdf")) {
                         for (int j = 0; j < filelist.size(); j++) {
                             if (filelist.get(j).getName().equals(listFile[i].getName())) {
                                 booleanpdf = true;
@@ -145,6 +164,7 @@ public class PDF_fragment extends Fragment {
             nr=0;
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.context_main,menu);
+
             return true;
 
         }
@@ -181,21 +201,7 @@ public class PDF_fragment extends Fragment {
                         Toast.makeText(getActivity(),"File doesnt exist", Toast.LENGTH_SHORT).show();
 
                     }
-                            /*Intent intentShare=new Intent(Intent.ACTION_SEND);
-                            intentShare.setType("application/pdf");
-                            intentShare.putExtra(Intent.EXTRA_STREAM, Uri.parse(name));
-                            startActivity(Intent.createChooser(intentShare,"Share wih"));*/
 
-                          /*  if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                Uri path= FileProvider.getUriForFile(HomeActivity.this,"com.example.docscanx.fileprovider",f1);
-                                intent.putExtra(Intent.EXTRA_STREAM,path);
-                            }
-                            else{
-                                intent.putExtra(Intent.EXTRA_STREAM,Uri.fromFile(f1));
-                            }
-                            intent.setType("application/pdf");
-                            startActivity(intent);*/
                     MimeTypeMap mimeTypeMap=MimeTypeMap.getSingleton();
                     String ext = mimeTypeMap.getExtensionFromMimeType(fname);
                     String type = mimeTypeMap.getExtensionFromMimeType(ext);
@@ -229,33 +235,24 @@ public class PDF_fragment extends Fragment {
                     return true;
 
 
-                case R.id.rename:
-                    AlertDialog.Builder alert = new AlertDialog.Builder(
-                            getActivity());
-                    alert.setTitle("Rename");
+                case R.id.ocr:
+                    String postUrl="http://192.168.29.206:5000/";
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inPreferredConfig = Bitmap.Config.RGB_565;
+                    Bitmap bitmap = BitmapFactory.decodeFile(name.replaceAll(".pdf",".jpg"), options);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
 
-                    final EditText input = new EditText(getActivity());
-                    alert.setView(input);
+                    RequestBody postBodyImage = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
+                            .addFormDataPart("image", fname.replaceAll(".pdf",".jpg"), RequestBody.create(MediaType.parse("image/*jpg"), byteArray))
+                            .build();
 
 
-                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            String srt1 = input.getEditableText().toString();
-                            //update your listview here
-                            input.setText(srt1);
-
-                        }
-                    });
-
-                    alert.setNegativeButton("CANCEL",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alertDialog = alert.create();
-                    alertDialog.show();
-
+                    postRequest(postUrl, postBodyImage);
+                    Intent i = new Intent(getActivity(), HomeActivity1.class);
+                    startActivity(i);
                     mode.finish();
                     return true;
                 default:
@@ -269,5 +266,61 @@ public class PDF_fragment extends Fragment {
 
 
     };
+    void postRequest(String postUrl, RequestBody postBody) {
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(postUrl)
+                .post(postBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // Cancel the post on failure.
+                call.cancel();
+                Log.d("FAIL", e.getMessage());
+
+
+            }
+
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                // In order to access the TextView inside the UI thread, the code is executed inside runOnUiThread()
+                String ocr_text = response.body().string();
+                try {
+                    File root = new File(Environment.getExternalStorageDirectory(), "Notes");
+                    if (!root.exists()) {
+                        root.mkdirs();
+                    }
+                    File gpxfile = new File(root, fname.replaceAll(".pdf",".txt"));
+                    FileWriter writer = new FileWriter(gpxfile);
+                    writer.append(ocr_text);
+                    writer.flush();
+                    writer.close();
+                    //Toast.makeText(getActivity(), "Saved", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                SM.sendData(ocr_text);
+            }
+        });
+    }
+    interface SendMessage{
+        void sendData(String message);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            SM = (SendMessage) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Error in retrieving data. Please try again");
+        }
+    }
 
 }

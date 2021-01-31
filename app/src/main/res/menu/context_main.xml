@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/rename"
-        android:icon="@drawable/ic_baseline_create_24"
+        android:id="@+id/ocr"
+        android:icon="@drawable/ic_baseline_find_in_page_24"
         android:title="Rename"
         android:visibility="visible"
         app:showAsAction="ifRoom"

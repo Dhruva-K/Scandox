@@ -3,19 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="85dp"
     android:orientation="horizontal"
-android:background="@drawable/bgg2"
-
-
-    >
+    android:background="@drawable/bgg2">
 
     <ImageView
         android:id="@+id/iv_image"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:src="@drawable/pdf_icon"
-        android:layout_marginTop="7dp"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
         android:layout_marginLeft="5dp"
-        android:scaleType="fitXY"/>
+        android:layout_marginTop="7dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ocr" />
 
     <TextView
         android:id="@+id/tv_name"

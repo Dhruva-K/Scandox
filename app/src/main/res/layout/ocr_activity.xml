@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
-    android:orientation="vertical"
-    tools:context=".PdfActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.appcompat.widget.Toolbar
 
@@ -17,18 +14,21 @@
         app:titleTextAppearance="@style/yourstyle"
         android:background="@color/white"
         app:layout_scrollFlags="scroll|enterAlways"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        tools:ignore="MissingConstraints" />
 
     <View android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/gray"
-        />
+        tools:ignore="MissingConstraints" />
 
-
-    <com.github.barteksc.pdfviewer.PDFView
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="28dp"
+        tools:layout_editor_absoluteY="60dp"
+        android:id="@+id/ocr_text"
+        android:gravity="center"
+        tools:ignore="MissingConstraints" />
 
-        android:id="@+id/pdfview"/>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

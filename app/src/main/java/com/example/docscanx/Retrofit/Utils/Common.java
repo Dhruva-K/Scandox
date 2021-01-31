@@ -9,7 +9,7 @@ import android.provider.MediaStore;
 import java.net.URISyntaxException;
 
 public class Common {
-
+//code for return uri(file path that we click from our camera)
     @SuppressLint("NewApi")
     public static String getFilePath(Context context, Uri uri) throws URISyntaxException
     {
